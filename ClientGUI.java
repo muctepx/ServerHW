@@ -10,6 +10,13 @@ import javax.swing.JTextField;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.io.FileWriter;
+import java.io.IOException;
+
 
 public class ClientGUI extends JFrame {
     private static final int WIDTH = 400;
@@ -33,6 +40,32 @@ public class ClientGUI extends JFrame {
         setLocationRelativeTo(null);
         setSize(WIDTH, HEIGHT);
         setTitle("Chat client");
+
+        btnSend.addActionListener((ActionListener) new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String text = tfMessage.getText();
+                log.append(text + "\n");
+            }
+        });
+
+        tfMessage.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    String text = tfMessage.getText();
+                    log.append(text + "\n");
+                }
+            }
+        });
+
+
+        try (FileWriter writer = new FileWriter(
+                "D:\\Education\\Coding\\Java\\JavaDevelopmentKit\\Lesson1\\Server\\notes.txt", true)) {
+            String text = tfMessage.getText();
+            writer.write(text);
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
 
         panelTop.add(tfIPAddress);
         panelTop.add(tfPort);
